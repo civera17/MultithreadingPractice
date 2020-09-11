@@ -2,19 +2,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MyRunnable implements Runnable{
-    public int count = 0;
 
-    public int getCount() {
-        return count;
-    }
 
     @Override
     public void run() {
+        int count = 0;
         try {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 1000000; i++) {
                 count++;
             }
-            System.out.println("Current correctness: " + count + "%");
         } catch (Throwable e) {
             e.printStackTrace();
         }

@@ -5,78 +5,58 @@ import java.util.concurrent.*;
 
 public class Chronometer {
 
-
-    public static <R> R timed(Callable<R> task) throws Exception {
-        for (int i = 0; i < 10; i++) {
-            task.call();
-            System.out.println(task.call());
-        }
-        return null;
+    Chronometer() {
     }
 
+    public static <R> R timed(Callable<R> task){
+        R result;
+        long start = System.currentTimeMillis();
+        try {
+            result = task.call();
+        } catch (Exception e) {
+            result = null;
+            e.printStackTrace();
+        }
+        long end = System.currentTimeMillis();
+        printCalculations(start,end,1);
+        return result;
+    }
 
     public static void timed(Runnable task) {
-        double start = System.currentTimeMillis();
-        int it = 0;
-        Thread[] t = new Thread[40000];
-        for (int i = 0; i < t.length; i++) {
-            t[i] = new Thread(task);
-            t[i].start();
-            it++;
-            try {
-                t[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-//        for (int i = 0; i < 1000; i++) {
-//            Thread myThread = new Thread(task);
-//            System.out.println("Thread " + myThread.getId() + " starting...");
-//            myThread.start();
-//            it++;
-//            try {
-//                myThread.join();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        double end = System.currentTimeMillis();
-        double eRate =  it / (end - start);
-        double timeElapsed = (end - start) / 1000.0;
-        System.out.println("Time = " + timeElapsed + "s");
-        System.out.println("Iterations = " + it);
-        System.out.println("Execution rate = " + eRate + " t/s");
+        long start = System.currentTimeMillis();
+        task.run();
+        long end = System.currentTimeMillis();
+        printCalculations(start,end,1);
     }
 
 
     public static void timed(Runnable task, long declaredIterations) {
-        double start = System.currentTimeMillis();
-        int it = 0;
-        int correctness;
-        Thread[] t = new Thread[(int) declaredIterations];
-        for (int i = 0; i < declaredIterations; i++) {
-            t[i] = new Thread(task);
-            t[i].start();
-            it++;
-            try {
-                t[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        double end = System.currentTimeMillis();
-        double eRate =  it / (end - start);
-        double timeElapsed = (end - start) / 1000.0;
-        System.out.println("Time = " + timeElapsed + "s");
-        System.out.println("Iterations = " + it);
-        System.out.println("Execution rate = " + eRate + " t/s");
+        long start = System.currentTimeMillis();
+        task.run();
+        long end = System.currentTimeMillis();
+        printCalculations(start,end,declaredIterations);
     }
 
-    public static <R> R timed(Callable<R> task, long declaredIterations) throws Exception {
-        for (int i = 0; i < declaredIterations; i++) {
-            task.call();
-            System.out.println(task.call());
+    public static <R> R timed(Callable<R> task, long declaredIterations){
+        R result;
+        long start = System.currentTimeMillis();
+        try {
+            result = task.call();
+        } catch (Exception e) {
+            result = null;
+            e.printStackTrace();
         }
-        return null;
+        long end = System.currentTimeMillis();
+        printCalculations(start,end,declaredIterations);
+        return result;
     }
+
+    public static void printCalculations(long start, long end, long iterations){
+        double timeElapsed = (end - start) / 1000.0;
+        double eRate = iterations / timeElapsed;
+        System.out.println("Time = " + timeElapsed + "s");
+        System.out.println("Iterations = " + iterations);
+        System.out.println("Execution rate = " + String.format(" %,1.2f t/s", eRate));
+    }
+
 }
